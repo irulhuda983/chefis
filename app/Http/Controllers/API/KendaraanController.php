@@ -65,10 +65,69 @@ class KendaraanController extends Controller
         $nopolc = count($match) ? $match[3]: ' ';
 
         try {
+            $user = $request->user();
+
+            if($response->status() != 200){
+                return response()->json(['success' => false, 'data' => null], 400);
+            }
+
+            $response_body = json_decode($response->body(), true);
+    
+            $data = [
+                'id_user' => $user->id,
+                'search_by' => 'nopol',
+                'status' => null,
+                'nrkb' => $nrkb,
+                'nama_pemilik' => null,
+                'alamat' => null,
+                'nik' => null,
+                'kabkota' => null,
+                'kecamatan' => null,
+                'kelurahan' => null,
+                'no_hp' => null,
+                'merk' => null,
+                'type' => null,
+                'no_rangka' => null,
+                'no_mesin' => null,
+                'tahun' => null,
+                'cc' => null,
+                'bbm' => null,
+                'jenis_kendaraan' => null,
+                'model_kendaraan' => null,
+                'warna' => null,
+                'warna_tnkb' => null,
+                'jml_roda' => null,
+                'jml_sumbu' => null,
+                'tgl_pkb' => null,
+                'tgl_stnk' => null,
+                'no_bpkb' => null,
+                'no_stnk' => null,
+                'no_faktur' => null,
+                'tgl_faktur' => null,
+                'apm' => null,
+                'no_pib' => null,
+                'no_sut' => null,
+                'no_srut' => null,
+                'no_tpt' => null,
+                'no_form_abc' => null,
+                'no_lelang' => null,
+                'tgl_daftar_akhir' => null,
+                'email' => null,
+            ];
+
+            if($data['nrkb'] != null) {
+                $history = History::create([
+                    'id_user' => $user->id,
+                    'nrkb' => $data['nrkb'],
+                    'tipe' => 'search',
+                    'keterangan' => 'Mencari data ranmor dengan nrkb '. $data['nrkb'],
+                    'waktu' => Carbon::now(),
+                ]);
+            }
 
             return response()->json([
                 'success' => true,
-                'data' => $nrkb
+                'data' => Crypt::encryptString(json_encode($data))
             ], 200);
         } catch (\Exception $e){
             return response()->json([
@@ -152,6 +211,11 @@ class KendaraanController extends Controller
             DB::rollBack();
             return response()->json(['success' => false, 'error' => $e->getMessage(), 'message' => 'Internal Server Error'], 500);
         }
+
+        // $pdf = Pdf::loadView('pdf.sprkb', compact('data'));
+        // $pdf->setPaper('f4');
+        // $pdf->setOption(['dpi' => 150, 'defaultFont' => 'Arial']);
+        // $pdf->save($name)->stream('download.pdf');
 
         return response()->json([
             'data' => $surat,
