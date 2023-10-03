@@ -1,0 +1,1 @@
+import{A as r,r as t}from"./app-a756ee56.js";const n=r("ranmor",()=>{const e=t(localStorage.getItem("RANMOR")?JSON.parse(localStorage.getItem("RANMOR")):null);return{ranmor:e,setRanmor:o=>{e.value=o,e.value?localStorage.setItem("RANMOR",JSON.stringify(o)):localStorage.removeItem("RANMOR")},deleteRanmor:()=>{localStorage.removeItem("RANMOR"),e.value=null}}});export{n as u};
