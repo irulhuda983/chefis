@@ -66,12 +66,6 @@ class KendaraanController extends Controller
 
         try {
             $user = $request->user();
-
-            if($response->status() != 200){
-                return response()->json(['success' => false, 'data' => null], 400);
-            }
-
-            $response_body = json_decode($response->body(), true);
     
             $data = [
                 'id_user' => $user->id,
